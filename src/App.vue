@@ -5,8 +5,9 @@
 <template>
   <div>
     <tree-select 
-      :data="actualTree"
+      :treeData="actualTree"
       :props="defaultProp"
+      :show-checkbox="true"
       v-model="id"
       :multiple="true"></tree-select>
   </div>
@@ -20,7 +21,7 @@ export default {
     return {
       treeData: Object.freeze([
         { id: 1, name: 'firstParent'},
-        { id: 2, parentId: 1, name: '子节点1'},
+        { id: 9, parentId: 1, name: '子节点1'},
         { id: 3, parentId: 1, name: '子节点2'},
         { id: 4, parentId: 1, name: '子节点3'},
         { id: 5, parentId: 1, name: '子节点4'},

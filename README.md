@@ -4,7 +4,6 @@
 |v-model|String|绑定的数据|
 |treeData|Array|树结构数组|
 |props|Object|同element-ui的props|
-|multiple|Boolean|是否多选| false
 |uniqueKey|String|树节点的唯一值|
 |showCheckbox|Boolean|是否显示checkbox|
 |placeholder|String|占位符|

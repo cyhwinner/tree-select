@@ -1,26 +1,39 @@
-<style lang="stylus">
-  .popover-custom
-    display inline-block
-    width 100%
-    .el-autocomplete
-      width 100%
-      .el-input
-        &:hover
-          .el-icon-arrow-down
-            display none
-          .el-input__suffix-inner
-            .el-icon-circle-close
-              display block
-        .el-icon-circle-close
-          display none
-          cursor pointer
-    .icon-arrow-transition
-      transform rotate(180deg);
-      transition all 0.3s;
-    .el-input__inner
-      height 36px
-      color: #1f2d3d
-      padding-left 10px
+<style lang="scss">
+  .popover-custom{
+    display: inline-block;
+    width: 100%;
+    .el-autocomplete{
+      width: 100%;
+      .el-input{
+        &:hover{
+          .el-icon-arrow-down{
+            display: none;
+          }
+          .el-input__suffix-inner{
+            .el-icon-circle-close{
+              display: block;
+            }
+          }
+        }
+        .el-icon-circle-close{
+          display: none;
+          cursor: pointer;
+        }
+      }
+        
+    }
+      
+    .icon-arrow-transition{
+      transform: rotate(180deg);
+      transition: all 0.3s;
+    }
+    .el-input__inner{
+      height: 36px;
+      color: #1f2d3d;
+      padding-left: 10px;
+    }
+  }
+   
 </style>
 <template>
 <div>
@@ -72,10 +85,6 @@ import { flatTreeToMap } from './eval';
 export default {
   props: {
     value: [String, Number, Array],
-    multiple: {
-      type: Boolean,
-      defalut: false
-    },
     treeData: Array,
     showCheckbox: {
       type: Boolean,
@@ -118,7 +127,7 @@ export default {
     },
     selectedName() {
       const selectedName = this.selectedData.name;
-      return this.multiple
+      return this.showCheckbox
         ? selectedName
           ? selectedName.join(',')
           : ''
@@ -131,10 +140,10 @@ export default {
   watch: {
     value(cur, pre) {
       if (cur === '') {
-        this.selectedData.name = this.multiple ? [] : '';
+        this.selectedData.name = this.showCheckbox ? [] : '';
         return;
       }
-      this.selectedData.name = this.multiple
+      this.selectedData.name = this.showCheckbox
         ? cur.map((id) => this.nodeMap[id].name)
         : this.nodeMap[cur]
           ? this.nodeMap[cur].name
@@ -158,7 +167,7 @@ export default {
 
   methods: {
     init() {
-      if (this.multiple) {
+      if (this.showCheckbox) {
         this.model = Array.isArray(this.value)
           ? this.value.slice()
           : this.value !== ''
@@ -177,7 +186,7 @@ export default {
         if (this.showCheckbox) {
           this.$refs.tree.setCheckedKeys(this.model);
         } else {
-          this.defaultExpandKeys = this.multiple
+          this.defaultExpandKeys = this.showCheckbox
             ? this.model.slice()
             : this.model
               ? [this.model.toString()]
@@ -187,7 +196,7 @@ export default {
     },
     handleNodeClick(data, node) {
       const { selectedData, uniqueKey, props } = this;
-      if (!this.multiple) {
+      if (!this.showCheckbox) {
         this.model = data[uniqueKey];
         this.isShowTree = false;
         selectedData.name = data[props.label];
@@ -207,6 +216,7 @@ export default {
       this.showCheckbox && this.isShowTree && this.$refs.tree.setCheckedKeys([]);
     },
     handleChecked(checkedNodes, checkedObject) {
+      this.model = checkedObject.checkedKeys;
       this.$emit('checkedChange', checkedObject)
     }
   }
