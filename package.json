@@ -1,7 +1,7 @@
 {
-  "name": "treetable",
-  "version": "1.0.0",
-  "description": "vue-tree-table",
+  "name": "treeselect",
+  "version": "1.0.1",
+  "description": "vue-tree-select",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
