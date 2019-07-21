@@ -107,9 +107,6 @@ export default {
   },
   data () {
     return {
-      selectedData: {
-        name: ''
-      },
       isShowTree: false,
       defaultExpandKeys: [],
       popoverWidth: '',
@@ -126,29 +123,22 @@ export default {
       }
     },
     selectedName() {
-      const selectedName = this.selectedData.name;
-      return this.showCheckbox
-        ? selectedName
-          ? selectedName.join(',')
-          : ''
-        : selectedName;
+       const value = this.value;
+      if (value === '') {
+        return ''
+      } else {
+        return this.multiple
+          ? value.map((id) => this.nodeMap[id][this.label])
+          : this.nodeMap[value]
+            ? this.nodeMap[value][this.label]
+            : '';
+      }
     },
     nodeMap() {
       return flatTreeToMap(this.treeData, {}, this.uniqueKey, this.props.children)
     }
   },
   watch: {
-    value(cur, pre) {
-      if (cur === '') {
-        this.selectedData.name = this.showCheckbox ? [] : '';
-        return;
-      }
-      this.selectedData.name = this.showCheckbox
-        ? cur.map((id) => this.nodeMap[id].name)
-        : this.nodeMap[cur]
-          ? this.nodeMap[cur].name
-          : ''
-    },
     isShowTree(cur) {
       if (cur) {
         this.init();
@@ -173,7 +163,6 @@ export default {
           : this.value !== ''
             ? [this.value]
             : []
-        this.selectedData.name = this.selectedData.name ? this.selectedData.name : [];
       }
     },
     fetchSuggestion(queryString, cb) {
@@ -195,14 +184,12 @@ export default {
       })
     },
     handleNodeClick(data, node) {
-      const { selectedData, uniqueKey, props } = this;
+      const { uniqueKey } = this;
       if (!this.showCheckbox) {
         this.model = data[uniqueKey];
         this.isShowTree = false;
-        selectedData.name = data[props.label];
       } else {
         if (!this.showCheckbox) {
-          selectedData.name.push(data[props.label]);
           this.model.push(data[uniqueKey]);
         }
       }
@@ -211,7 +198,6 @@ export default {
       return this.nodeMap[id];
     },
     clearValue() {
-      this.selectedData.name = '';
       this.model = '';
       this.showCheckbox && this.isShowTree && this.$refs.tree.setCheckedKeys([]);
     },
